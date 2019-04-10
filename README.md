@@ -1,10 +1,16 @@
 Device Tree for Moto G5S Plus (sanders)
 ===========================================
 
+Before start userdata has to be transformed to ext4.
+boot twrp and `mke2fs -t ext4 /dev/block/mmcblk0p54`
 Problems:
 * /dev/cpuset not in place
 * /dev/pmsg0 not in place
+* cutils-trace: Error opening trace file: Permission denied (13)
 
+when halium booted, set udev rules:
+`sudo -i`
+`cat /var/lib/lxc/android/rootfs/ueventd*.rc|grep ^/dev|sed -e 's/^\/dev\///'|awk '{printf "ACTION==\"add\", KERNEL==\"%s\", OWNER=\"%s\", GROUP=\"%s\", MODE=\"%s\"\n",$1,$3,$4,$2}' | sed -e 's/\r//' >/usr/lib/lxc-android-config/70-sanders.rules`
 The Motorola Moto G5S Plus (codenamed _"sanders"_) is a mid-range smartphone from Motorola Mobility.
 It was announced in August 2017.
 
