@@ -197,7 +197,7 @@ lib/libqomx_core.so
 lib/libsensorservice.so
 #lib/libYuvSkia.so
 lib/libtinyxml.so
-lib/libgui.so
+system/lib/libgui.so
 vendor/bin/audioflacapp
 #vendor/bin/esepmdaemon
 vendor/bin/mm-pp-dpps
