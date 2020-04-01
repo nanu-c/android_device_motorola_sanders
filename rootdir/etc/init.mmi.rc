@@ -213,7 +213,7 @@ on boot
 
    # Change ownership and permission for vibrator
    chown system system /sys/class/timed_output/vibrator/enable
-   chmod 0660 /sys/class/timed_output/vibrator/enable
+   chmod 0666 /sys/class/timed_output/vibrator/enable
 
    chown root mot_tcmd /sys/class/graphics/fb0/te_enable
    chown root mot_tcmd /sys/class/graphics/fb0/frame_counter
