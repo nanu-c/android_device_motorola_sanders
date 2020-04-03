@@ -109,6 +109,7 @@ on boot
     chown system drmrpc /sys/devices/soc/78b7000.i2c/i2c-3/3-0020/input/input0/secure_touch
     mkdir /dev/cpuset
     start nanu
+    start sensorservice
     chown bluetooth bluetooth /sys/module/bluetooth_power/parameters/power
     chown bluetooth net_bt /sys/class/rfkill/rfkill0/type
     chown bluetooth net_bt /sys/class/rfkill/rfkill0/state
@@ -300,7 +301,72 @@ on boot
     chown system system /dev/cpuset/camera-daemon
     chown system system /dev/cpuset/camera-daemon/tasks
     chmod 0664 /dev/cpuset/camera-daemon/tasks
+    chown radio system /sys/android_power/acquire_partial_wake_lock
+    chown radio system /sys/android_power/release_wake_lock
+    chown system system /sys/power/autosleep
+    chown system system /sys/power/state
+    chown system system /sys/power/wakeup_count
+    chown radio wakelock /sys/power/wake_lock
+    chown radio wakelock /sys/power/wake_unlock
+    chmod 0660 /sys/power/state
+    chmod 0660 /sys/power/wake_lock
+    chmod 0660 /sys/power/wake_unlock
+    chown system system /sys/devices/system/cpu/cpufreq/interactive/timer_rate
+    chmod 0660 /sys/devices/system/cpu/cpufreq/interactive/timer_rate
+    chown system system /sys/devices/system/cpu/cpufreq/interactive/timer_slack
+    chmod 0660 /sys/devices/system/cpu/cpufreq/interactive/timer_slack
+    chown system system /sys/devices/system/cpu/cpufreq/interactive/min_sample_time
+    chmod 0660 /sys/devices/system/cpu/cpufreq/interactive/min_sample_time
+    chown system system /sys/devices/system/cpu/cpufreq/interactive/hispeed_freq
+    chmod 0660 /sys/devices/system/cpu/cpufreq/interactive/hispeed_freq
+    chown system system /sys/devices/system/cpu/cpufreq/interactive/target_loads
+    chmod 0660 /sys/devices/system/cpu/cpufreq/interactive/target_loads
+    chown system system /sys/devices/system/cpu/cpufreq/interactive/go_hispeed_load
+    chmod 0660 /sys/devices/system/cpu/cpufreq/interactive/go_hispeed_load
+    chown system system /sys/devices/system/cpu/cpufreq/interactive/above_hispeed_delay
+    chmod 0660 /sys/devices/system/cpu/cpufreq/interactive/above_hispeed_delay
+    chown system system /sys/devices/system/cpu/cpufreq/interactive/boost
+    chmod 0660 /sys/devices/system/cpu/cpufreq/interactive/boost
+    chown system system /sys/devices/system/cpu/cpufreq/interactive/boostpulse
+    chown system system /sys/devices/system/cpu/cpufreq/interactive/input_boost
+    chmod 0660 /sys/devices/system/cpu/cpufreq/interactive/input_boost
+    chown system system /sys/devices/system/cpu/cpufreq/interactive/boostpulse_duration
+    chmod 0660 /sys/devices/system/cpu/cpufreq/interactive/boostpulse_duration
+    chown system system /sys/devices/system/cpu/cpufreq/interactive/io_is_busy
+    chmod 0660 /sys/devices/system/cpu/cpufreq/interactive/io_is_busy
 
+        # Assume SMP uses shared cpufreq policy for all CPUs
+        chown system system /sys/devices/system/cpu/cpu0/cpufreq/scaling_max_freq
+        chmod 0660 /sys/devices/system/cpu/cpu0/cpufreq/scaling_max_freq
+
+        chown system system /sys/class/timed_output/vibrator/enable
+        chown system system /sys/class/leds/keyboard-backlight/brightness
+        chown system system /sys/class/leds/lcd-backlight/brightness
+        chown system system /sys/class/leds/button-backlight/brightness
+        chown system system /sys/class/leds/jogball-backlight/brightness
+        chown system system /sys/class/leds/red/brightness
+        chown system system /sys/class/leds/red/blink
+        chown system system /sys/class/leds/green/brightness
+        chown system system /sys/class/leds/green/blink
+        chown system system /sys/class/leds/blue/brightness
+        chown system system /sys/class/leds/blue/blink
+        chown system system /sys/class/leds/red/device/grpfreq
+        chown system system /sys/class/leds/red/device/grppwm
+        chown system system /sys/class/leds/red/device/blink
+        chown system system /sys/class/timed_output/vibrator/enable
+        chown system system /sys/module/sco/parameters/disable_esco
+        chown system system /sys/kernel/ipv4/tcp_wmem_min
+        chown system system /sys/kernel/ipv4/tcp_wmem_def
+        chown system system /sys/kernel/ipv4/tcp_wmem_max
+        chown system system /sys/kernel/ipv4/tcp_rmem_min
+        chown system system /sys/kernel/ipv4/tcp_rmem_def
+        chown system system /sys/kernel/ipv4/tcp_rmem_max
+        chown root radio /proc/cmdline
+
+        # Define default initial receive window size in segments.
+        setprop net.tcp.default_init_rwnd 60
+
+        class_start core
 # msm specific files that need to be created on /data
 on post-fs-data
     mkdir /tombstones/modem 0771 system system
@@ -529,10 +595,10 @@ service qseeproxydaemon /system/vendor/bin/qseeproxydaemon
     writepid /dev/cpuset/system-background/tasks
     disabled
 
-service esepmdaemon /system/vendor/bin/esepmdaemon
-    class core
-    user system
-    group nfc
+#service esepmdaemon /system/vendor/bin/esepmdaemon
+#    class core
+#    user system
+#    group nfc
 
 service wcnss-service /system/bin/wcnss_service
     class main
@@ -682,7 +748,7 @@ service ftmd /system/bin/ftmdaemon
 
 service port-bridge /system/bin/port-bridge
     class main
-    user radio system
+    user radio
     group radio system inet
     disabled
     oneshot
@@ -882,10 +948,11 @@ service sensor-sh /system/bin/sh /init.qcom.sensors.sh
     user root
     oneshot
 
-service atfwd /system/bin/ATFWD-daemon
-    class late_start
-    user system
-    group system radio
+    #enable for miracast
+#service atfwd /system/bin/ATFWD-daemon
+#    class late_start
+#    user system
+#    group system radio
 
 on property:ro.data.large_tcp_window_size=true
     # Adjust socket buffer to enlarge TCP receive window for high bandwidth (e.g. DO-RevB)
@@ -942,7 +1009,7 @@ on property:persist.sys.ssr.restart_level=*
 on charger
     wait /dev/block/bootdevice/by-name/system
     mount ext4 /dev/block/bootdevice/by-name/system /system ro barrier=1
-    load_all_props
+    #load_all_props
     setprop sys.usb.configfs 0
     setprop persist.sys.usb.config mass_storage
     write /sys/class/leds/white/trigger "battery-full"
@@ -1039,3 +1106,12 @@ on property:sys.boot_completed=1
 
     rm /data/system/perfd/default_values
     start perfd
+
+
+  service minimedia /system/bin/minimediaservice
+    class main
+    user media
+    group audio camera
+    ioprio rt 4
+    #   hack to make recorded video playback work
+    setenv LD_PRELOAD /system/lib/libOmxVdec.so

@@ -57,8 +57,8 @@ PRODUCT_AAPT_CONFIG := normal
 # Audio
 PRODUCT_PACKAGES += \
     audiod \
+		audio.primary.msm8953 \
     audio.a2dp.default \
-    audio.primary.msm8953 \
     audio.r_submix.default \
     audio.usb.default \
     libaudio-resampler \
@@ -66,6 +66,9 @@ PRODUCT_PACKAGES += \
     libqcomvoiceprocessing \
     libqcompostprocbundle \
     libshim_adsp \
+		libaacwrapper \
+		libaudio-resampler \
+		libtinycompress \
     tinymix
 
 PRODUCT_COPY_FILES +=  \
@@ -302,16 +305,29 @@ PRODUCT_COPY_FILES += \
     kernel/motorola/msm8953/drivers/staging/prima/firmware_bin/WCNSS_cfg.dat:system/etc/firmware/wlan/prima/WCNSS_cfg.dat \
     $(LOCAL_PATH)/wifi/WCNSS_qcom_cfg.ini:system/etc/firmware/wlan/prima/WCNSS_qcom_cfg.ini
 
-		# Ubuntu Overlay Files
-		#
+# Ubuntu Overlay Files
+#
+#$(LOCAL_PATH)/ubuntu/touch.pa:system/halium/etc/pulse/touch.pa \
+
 PRODUCT_COPY_FILES += \
-	  $(LOCAL_PATH)/ubuntu/touch.pa:system/halium/etc/pulse/touch.pa \
     $(LOCAL_PATH)/ubuntu/70-sanders.rules:system/halium/usr/lib/lxc-android-config/70-sanders.rules \
     $(LOCAL_PATH)/ubuntu/apparmor.d/local/usr.bin.media-hub-server:system/halium/etc/apparmor.d/local/usr.bin.media-hub-server \
     $(LOCAL_PATH)/ubuntu/apparmor.d/abstractions/base:system/halium/etc/apparmor.d/abstractions/base \
 		$(LOCAL_PATH)/ubuntu/apparmor.d/hardware/graphics.d/apparmor-easyprof-ubuntu_android:system/halium/usr/share/apparmor/hardware/graphics.d/apparmor-easyprof-ubuntu_android \
 		$(LOCAL_PATH)/ubuntu/apparmor.d/hardware/video.d/apparmor-easyprof-ubuntu_android:system/halium/usr/share/apparmor/hardware/video.d/apparmor-easyprof-ubuntu_android
 
+# UBPorts
+PRODUCT_PACKAGES += \
+		     libubuntu_application_api \
+		     direct_ubuntu_application_sensors_c_api_for_hybris_test \
+		     direct_ubuntu_application_sensors_for_hybris_test \
+		     direct_ubuntu_application_gps_c_api_for_hybris_test \
+		     libcamera_compat_layer \
+		     libmedia_compat_layer_32 \
+		     libaudioflingerglue \
+		     libdroidmedia \
+		     libminisf \
+		     minimediaservice
 PRODUCT_BUILD_PROP_OVERRIDES += BUILD_UTC_DATE=0
 
 PRODUCT_GMS_CLIENTID_BASE := android-motorola
