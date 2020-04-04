@@ -120,7 +120,14 @@ set_ro_hw_properties()
 # Main starts here
 IFS=$'\n'
 
+notice "fix mountpoints"
+
+mkdir /dev/block/bootdevice
+mkdir /dev/block/bootdevice/by-name
+mount --bind /dev/disk/by-partlabel /dev/block/bootdevice/by-name
+
 notice "initializing procfs"
+
 procfs_wait_for_device readiness
 
 set_ro_hw_properties

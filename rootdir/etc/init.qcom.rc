@@ -44,11 +44,11 @@ on fs
     # these partition flashed on the device. Failure to mount any partition in fstab file
     # results in failure to launch late-start class.
 
-    wait /dev/block/bootdevice/by-name/persist
+    wait /dev/disk/by-partlabel/persist
     mkdir /persist/data 0700  system system
     restorecon_recursive   /persist
 
-    wait /dev/block/bootdevice/by-name/dsp
+    wait /dev/disk/by-partlabel/dsp
     restorecon_recursive   /dsp
 
     #use encrypted data dir
@@ -102,6 +102,9 @@ on property:ro.crypto.fs_crypto_blkdev=/dev/block/dm-0
     stop sbinqseecomd
 
 on boot
+    mkdir /dev/block/bootdevice
+    mkdir /dev/block/bootdevice/by-name
+    symlink /dev/disk/by-partlabel /dev/block/bootdevice/by-name
     # access permission for secure touch
     chmod 0660 /sys/devices/soc/78b7000.i2c/i2c-3/3-0020/input/input0/secure_touch_enable
     chmod 0440 /sys/devices/soc/78b7000.i2c/i2c-3/3-0020/input/input0/secure_touch
@@ -1007,8 +1010,8 @@ on property:persist.sys.ssr.restart_level=*
     start ssr_setup
 
 on charger
-    wait /dev/block/bootdevice/by-name/system
-    mount ext4 /dev/block/bootdevice/by-name/system /system ro barrier=1
+    wait /dev/disk/by-partlabel/system
+    mount ext4 /dev/disk/by-partlabel/system /system ro barrier=1
     #load_all_props
     setprop sys.usb.configfs 0
     setprop persist.sys.usb.config mass_storage
