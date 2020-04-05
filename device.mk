@@ -310,6 +310,7 @@ PRODUCT_COPY_FILES += \
 #$(LOCAL_PATH)/ubuntu/touch.pa:system/halium/etc/pulse/touch.pa \
 
 PRODUCT_COPY_FILES += \
+		$(LOCAL_PATH)/ubuntu/touch.pa:system/halium/etc/pulse/touch.pa \
     $(LOCAL_PATH)/ubuntu/70-sanders.rules:system/halium/usr/lib/lxc-android-config/70-sanders.rules \
     $(LOCAL_PATH)/ubuntu/apparmor.d/local/usr.bin.media-hub-server:system/halium/etc/apparmor.d/local/usr.bin.media-hub-server \
     $(LOCAL_PATH)/ubuntu/apparmor.d/abstractions/base:system/halium/etc/apparmor.d/abstractions/base \
